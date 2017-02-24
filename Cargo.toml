@@ -1,0 +1,6 @@
+[package]
+name = "datalog"
+version = "0.1.0"
+authors = ["Josh Asplund <joshasplund@gmail.com>"]
+
+[dependencies]
