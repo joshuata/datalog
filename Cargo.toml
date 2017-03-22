@@ -1,6 +1,11 @@
 [package]
 name = "datalog"
+description = "INCOMPLETE! A simple interface for writing datalog programs."
 version = "0.0.1"
 authors = ["Josh Asplund <joshasplund@gmail.com>"]
+license = "MIT"
+
+[badges]
+travis-ci = { repository = "joshuata/datalog", branch = "master" }
 
 [dependencies]
