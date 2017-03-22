@@ -23,7 +23,7 @@ impl Writer for FileWriter {
     fn add(&mut self, statement: Stmt) -> Result<(), Error> {
         match statement {
             Stmt::Fact(pred) => writeln!(self.file, "{}.", pred),
-            Stmt::Rule { head, tail } => {
+            Stmt::Rule(head, tail) => {
                 write!(self.file, "{} :- ", head).unwrap();
                 tail.iter().fold(true, |first, elem| {
                     if !first {

@@ -21,10 +21,7 @@ pub enum ID<'a> {
 
 pub enum Stmt<'a> {
     Fact(Pred<'a, &'a str>),
-    Rule {
-        head: Pred<'a, ID<'a>>,
-        tail: Vec<Pred<'a, ID<'a>>>,
-    },
+    Rule(Pred<'a, ID<'a>>, Vec<Pred<'a, ID<'a>>>),
     Query(Pred<'a, ID<'a>>),
 }
 
@@ -32,7 +29,7 @@ impl<'a> Display for Stmt<'a> {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         match *self {
             Stmt::Fact(ref pred) => write!(f, "{}.", pred),
-            Stmt::Rule { ref head, ref tail } => {
+            Stmt::Rule(ref head, ref tail) => {
                 write!(f, "{} :- ", head).unwrap();
                 tail.iter().fold(true, |first, elem| {
                     if !first {
