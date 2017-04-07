@@ -7,20 +7,30 @@ pub trait Predicate<T>: Display
     fn name(&self) -> &str;
     fn len(&self) -> usize;
     fn ids(&self) -> &Vec<T>;
+    fn is_empty(&self) -> bool;
 }
 
-pub struct Pred<'a, T> {
+#[derive(Debug)]
+pub struct Pred<'a, T> where T: Display {
     name: &'a str,
     ids: Vec<T>,
 }
 
+impl <'a, T> Pred<'a, T> where T: Display {
+    pub fn new(name: &'a str, ids: Vec<T>) -> Pred<'a, T> {
+        Pred{ name: name, ids: ids }
+    }
+}
+
+#[derive(Debug)]
 pub enum ID<'a> {
     Literal(&'a str),
     Variable(&'a str),
 }
 
+#[derive(Debug)]
 pub enum Stmt<'a> {
-    Fact(Pred<'a, &'a str>),
+    Fact(Pred<'a, ID<'a>>),
     Rule(Pred<'a, ID<'a>>, Vec<Pred<'a, ID<'a>>>),
     Query(Pred<'a, ID<'a>>),
 }
@@ -64,8 +74,8 @@ impl<'a, T> Display for Pred<'a, T>
 impl<'a> Display for ID<'a> {
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
         match *self {
-            ID::Literal(ref x) => write!(f, "'{}'", x),
-            ID::Variable(ref x) => write!(f, "{}", x),
+            ID::Literal(x) => write!(f, "'{}'", x),
+            ID::Variable(x) => write!(f, "{}", x),
         }
     }
 }
@@ -84,6 +94,10 @@ impl<'a, T> Predicate<T> for Pred<'a, T>
     fn ids(&self) -> &Vec<T> {
         &self.ids
     }
+
+    fn is_empty(&self) -> bool {
+        self.ids.is_empty()
+    }
 }
 
 
@@ -92,12 +106,32 @@ mod tests {
     use super::{Stmt, ID, Pred};
 
     #[test]
-    fn it_works() {
-        let test = Stmt::Query(Pred {
-                                   name: "foo",
-                                   ids: vec![ID::Literal("bar"), ID::Literal("baz")],
-                               });
-        let string = format!("{}", test);
-        assert_eq!(string, "foo('bar','baz')?");
+    fn queries() {
+        let test = Stmt::Query(Pred::new(
+                                   "foo",
+                                   vec![ID::Literal("bar"), ID::Literal("baz")],
+                               ));
+        assert_eq!(format!("{}", test), "foo('bar','baz')?");
+
+        let single = Stmt::Query(Pred::new(
+                                   "foo",
+                                   vec![ID::Literal("bar")],
+                               ));
+        assert_eq!(format!("{}", single), "foo('bar')?");
+    }
+
+    #[test]
+    fn facts() {
+        let test = Stmt::Fact(Pred::new(
+                                   "foo",
+                                   vec![ID::Literal("bar"), ID::Literal("baz")],
+                               ));
+        assert_eq!(format!("{}", test), "foo('bar','baz').");
+
+        let single = Stmt::Fact(Pred::new(
+                                   "foo",
+                                   vec![ID::Literal("bar")],
+                               ));
+        assert_eq!(format!("{}", single), "foo('bar').");
     }
 }

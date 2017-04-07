@@ -8,14 +8,14 @@ pub trait Writer {
     fn add(&mut self, Stmt) -> Result<(), Error>;
 }
 
+#[derive(Debug)]
 pub struct FileWriter {
     file: File,
 }
 
 impl FileWriter {
     pub fn new(path: &Path) -> FileWriter {
-        let file = File::create(path).unwrap();
-        return FileWriter { file: file };
+        FileWriter { file: File::create(path).unwrap() }
     }
 }
 

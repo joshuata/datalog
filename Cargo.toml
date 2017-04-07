@@ -1,8 +1,10 @@
 [package]
 name = "datalog"
 description = "INCOMPLETE! A simple interface for writing datalog programs."
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Josh Asplund <joshasplund@gmail.com>"]
+repository = "https://github.com/joshuata/datalog"
+readme = "README.md"
 license = "MIT"
 
 [badges]
