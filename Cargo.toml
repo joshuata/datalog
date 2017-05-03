@@ -11,3 +11,4 @@ license = "MIT"
 travis-ci = { repository = "joshuata/datalog", branch = "master" }
 
 [dependencies]
+nom = "2.2.1"

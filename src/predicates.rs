@@ -22,7 +22,7 @@ impl <'a, T> Pred<'a, T> where T: Display {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum ID<'a> {
     Literal(&'a str),
     Variable(&'a str),
